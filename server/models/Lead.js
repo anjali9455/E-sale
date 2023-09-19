@@ -17,8 +17,24 @@ FirstName: {
   PhoneNumbers:{
     type:[String],
     required: true,
+  },
+  City :{
+    type:String,
+    required:true,
+  },
+  leadType :{
+    type:String,
+    required:true,
+  },
+  NextFollowUp: {
+    type:String,
+    required:true,
+  } ,
+  Location :{
+    type:String,
+    required:true,
   }
-  
+
 });
 
 const LeadModel = mongoose.model('Lead', leadSchema);

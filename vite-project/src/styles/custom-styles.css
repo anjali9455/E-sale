@@ -1,0 +1,6 @@
+/* Add this CSS in your stylesheet or a <style> tag in your component */
+/* Add this CSS with higher specificity */
+.table.custom-light-purple {
+    background-color: #e6e6fa; /* This is a light purple color */
+  }
+  

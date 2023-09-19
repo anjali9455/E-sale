@@ -75,134 +75,162 @@
 // };
 
 // export default FollowUpList;\
-import React, { useState } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
+import axios from "axios";
 import AddFollowUp from "./AddFollowUp";
-import DashboardLayout from "./DashboardLayout";
 
 const FollowUp = () => {
-    const addFollowUp = (newFollowUp) => {
-    // Send a POST request to your API to create the follow-up
-    axios
-      .post("/api/follow", newFollowUp)
-      .then((response) => {
-        console.log("New follow-up created:", response.data);
-        // You can update your state or perform any necessary actions here
-        // For example, update the list of follow-ups
-      })
-      .catch((error) => {
-        console.error("Error creating a new follow-up:", error);
-        alert("Failed to create a new follow-up. Please try again.");
-      });
-  };
-
-
-  const [leads, setLeads] = useState([
-
-
-  ]);
-
-  const [filters, setFilters] = useState({
-    user: "",
-    lead: "",
-    followedOn: "",
-    nextFollowUp: "",
-    status: "",
-    location: "",
-    // Add more filter fields as needed
-  });
-
+  const [followUps, setFollowUps] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [showAddFollowUp, setShowAddFollowUp] = useState(false); // State to control the visibility of the Add Follow Up form
+  const [showAddFollowUp, setShowAddFollowUp] = useState(false);
 
-  const itemsPerPage = 10; // Number of items to show per page
+  const itemsPerPage = 10;
 
-  // Handle filter changes
-  const handleFilterChange = (e) => {
-    const { name, value } = e.target;
-    setFilters({ ...filters, [name]: value });
+  const handleSaveFollowUp = (newFollowUp) => {
+    // Generate a unique ID for the new follow-up
+    newFollowUp.id = Date.now().toString();
+    setFollowUps([...followUps, newFollowUp]);
   };
 
-  // Implement filtering logic based on filter values
-  const filteredLeads = leads.filter((lead) => {
-    // Implement your filter logic here
-    return (
-      lead.user.includes(filters.user) &&
-      lead.lead.includes(filters.lead) &&
-      lead.followedOn.includes(filters.followedOn) &&
-      lead.nextFollowUp.includes(filters.nextFollowUp) &&
-      lead.status.includes(filters.status) &&
-      lead.location.includes(filters.location)
-      // Add more filter conditions as needed
-    );
-  });
+  const deleteFollowUp = (id) => {
+    const updatedFollowUps = followUps.filter((followUp) => followUp.id !== id);
+    setFollowUps(updatedFollowUps);
+  };
 
-  // Calculate the total number of pages
-  const totalPages = Math.ceil(filteredLeads.length / itemsPerPage);
-
-  // Calculate the start and end indices for the current page
+  const totalPages = Math.ceil(followUps.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
+  const currentFollowUps = followUps.slice(startIndex, endIndex);
 
-  // Get the current page's data
-  const currentLeads = filteredLeads.slice(startIndex, endIndex);
-
-  // Handle page change
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
   };
 
-  // Function to open the Add Follow Up form
   const openAddFollowUpModal = () => {
     setShowAddFollowUp(true);
   };
 
-  // Function to close the Add Follow Up form
   const closeAddFollowUpModal = () => {
     setShowAddFollowUp(false);
   };
 
-  return (
-    
-      <div className="container mt-4">
-        <div className="d-flex justify-content-between align-items-center mb-4">
-          <h1>Follow Up List</h1>
-          <div className="d-flex">
-            <div className="input-group me-2">
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Search..."
-                name="user"
-                value={filters.user}
-                onChange={handleFilterChange}
-              />
-              <button className="btn btn-outline-secondary" type="button">
-                <i className="bi bi-filter"></i> Filter
-              </button>
-            </div>
-            <button className="btn btn-primary" onClick={openAddFollowUpModal}>
-              + Add Follow Up
-            </button>
-           
-          </div>
-        </div>
-        {/* Data table */}
-        <div className="table-responsive">
-          {/* ... (your existing code) */}
-        </div>
-        {/* Pagination */}
-        <div className="d-flex justify-content-center">
-          {/* ... (your existing code) */}
-        </div>
+  useEffect(() => {
+    axios
+      .get("http://localhost:3001/api/follow")
+      .then((response) => {
+        setFollowUps(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching follow-up data:", error);
+      });
+  }, []);
 
-        {/* Conditionally render the Add Follow Up form */}
-        {showAddFollowUp && <AddFollowUp onClose={closeAddFollowUpModal} />}
+  return (
+    <div className="container mt-4">
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <h1>Follow Up List</h1>
+        <div className="d-flex">
+          <button className="btn btn-primary" onClick={openAddFollowUpModal}>
+            + Add Follow Up
+          </button>
+          <button className="btn btn-danger ml-2">
+            Delete
+          </button>
+        </div>
       </div>
-    
+      <div className="table-responsive">
+        <table className="table table-success table-striped">
+          <thead>
+            <tr>
+              <th>Lead ID</th>
+              <th>Date</th>
+              <th>Time</th>
+              <th>Next Follow-Up</th>
+              <th>Location</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {currentFollowUps.map((followUp) => (
+              <tr key={followUp.id}>
+                <td>{followUp.leadId}</td>
+                <td>{followUp.date}</td>
+                <td>{followUp.time}</td>
+                <td>{followUp.nextFollowUp}</td>
+                <td>{followUp.location}</td>
+                <td>{followUp.status}</td>
+                <td>
+                  <button
+                    className="btn btn-warning"
+                    onClick={() => {
+                      // Handle edit action here
+                    }}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className="btn btn-danger mx-2"
+                    onClick={() => deleteFollowUp(followUp.id)}
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div className="d-flex justify-content-center">
+        <nav aria-label="Page navigation example">
+          <ul className="pagination">
+            <li className={`page-item ${currentPage === 1 && "disabled"}`}>
+              <button
+                className="page-link"
+                onClick={() => handlePageChange(currentPage - 1)}
+              >
+                Previous
+              </button>
+            </li>
+            {Array.from({ length: totalPages }, (_, index) => (
+              <li
+                key={index}
+                className={`page-item ${
+                  currentPage === index + 1 && "active"
+                }`}
+              >
+                <button
+                  className="page-link"
+                  onClick={() => handlePageChange(index + 1)}
+                >
+                  {index + 1}
+                </button>
+              </li>
+            ))}
+            <li
+              className={`page-item ${
+                currentPage === totalPages && "disabled"
+              }`}
+            >
+              <button
+                className="page-link"
+                onClick={() => handlePageChange(currentPage + 1)}
+              >
+                Next
+              </button>
+            </li>
+          </ul>
+        </nav>
+      </div>
+      {showAddFollowUp && (
+        <AddFollowUp
+          onClose={closeAddFollowUpModal}
+          onSaveFollowup={handleSaveFollowUp}
+        />
+      )}
+    </div>
   );
 };
 
 export default FollowUp;
-

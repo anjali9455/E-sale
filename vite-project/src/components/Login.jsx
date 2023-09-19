@@ -14,7 +14,7 @@ const Login = () => {
       .post('http://localhost:3001/login', { email, password })
       .then((result) => {
         console.log(result);
-        if (result.data === 'Success') {
+        if (result.data === 'Sucess') {
           navigate('/dashboard'); // Navigate to the Dashboard page after successful login
         }
       })

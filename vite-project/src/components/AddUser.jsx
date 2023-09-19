@@ -163,16 +163,21 @@ class AddUser extends Component {
         description: "",
       },
       createdUser: null, // To store the newly created user
+      error: null,
     };
   }
 
   handleChange = (e) => {
-    const { name, value } = e.target;
-    this.setState({
-      formData: { ...this.state.formData, [name]: value },
-    });
-  };
-
+  //   const { name, value } = e.target;
+  //   this.setState({
+  //     formData: { ...this.state.formData, [name]: value },
+  //   });
+  // };
+  const { name, value } = e.target;
+  this.setState((prevState) => ({
+    formData: { ...prevState.formData, [name]: value },
+  }));
+};
   handleSave = () => {
     const { userId, onClose, onUpdateUsers } = this.props;
     const { formData } = this.state;
@@ -211,8 +216,8 @@ class AddUser extends Component {
   };
 
   render() {
-    const { formData, createdUser } = this.state;
-
+    // const { formData, createdUser } = this.state;
+    const { formData, error } = this.state;
     return (
       <div className="container">
         <form>
@@ -295,7 +300,7 @@ class AddUser extends Component {
             Cancel
           </button>
 
-          
+          {error && <div className="alert alert-danger">{error}</div>}
         </form>
       </div>
     );

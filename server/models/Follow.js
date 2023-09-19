@@ -3,12 +3,12 @@ const mongoose = require('mongoose');
 const followSchema = new mongoose.Schema({
 LeadID: {
     type: String,
-    required: true,
+    required: false,
   },
   
   Date: {
     type: String,
-    required: true,
+    required: false,
     
   },
   NextFollowUp: {
@@ -16,11 +16,11 @@ LeadID: {
   },
   Location:{
     type:[String],
-    required: true,
+    required: false,
   },
   Status:{
     type:[String],
-    required: true,
+    required: false,
   }
   
 });

@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import DashboardLayout from "./DashboardLayout";
+import axios from "axios"
+
 const AddFollowup = ({ onSaveFollowup, onClose }) => {
   const [leadId, setLeadId] = useState("");
   const [date, setDate] = useState("");
@@ -11,6 +13,7 @@ const AddFollowup = ({ onSaveFollowup, onClose }) => {
 
 
   const handleSave = () => {
+    
     // Create a new follow-up object with the form data
     const newFollowup = {
       leadId,
@@ -27,15 +30,22 @@ const AddFollowup = ({ onSaveFollowup, onClose }) => {
     // onSaveFollowup(newFollowup);
 
     // Clear the form fields
-    setLeadId("");
-    setDate("");
-    setTime("");
-    setNextFollowUp("");
-    setLocation("");
-    setStatus("");
-  };
+    axios.post('http://localhost:3001/api/follow', newFollowup)
+    .then((response) => {
+      console.log('Follow-up saved successfully:', response.data);
+      setLeadId('');
+      setDate('');
+      setTime('');
+      setNextFollowUp('');
+      setLocation('');
+      setStatus('');
+      onClose();
+    })
+    .catch((error) => {
+      console.error('Error saving follow-up:', error);
+    });
+}
 
-  console.log(location);
 
   return (
     <div className="my-4">

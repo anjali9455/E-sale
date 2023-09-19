@@ -4,9 +4,14 @@ import { useNavigate, Outlet } from "react-router-dom";
 // import customFetch from "./utils/customFetch";
 // import { toast } from "react-toastify";
 
- import Layout from "./Layout";
-import LeadForm from "./LeadForm"; 
-
+//  import Layout from "./Layout";
+ import { Routes, Route } from "react-router-dom";
+import UserList from './UserList';
+import LeadForm from './LeadForm';
+import FollowUp from './FollowUp';
+import TimesheetList from './TimesheetList';
+import Sidebar from "../pages/Sidebar";
+import Navbar from "./Navbar";
 
 const DashboardLayout = () => {
   const navigate = useNavigate();
@@ -45,21 +50,29 @@ const DashboardLayout = () => {
 //   }, []);
 
   return (
-    <Layout>
-       {/* <Sidebar />
-      <Navbar user={user} logoutUser={logoutUser} />
-      <div className="content">
-        <Outlet context={{ user }} />
-        
-        
-        {showLeadForm && <LeadForm onCancel={handleCloseLeadForm} />}
-        {/* {!showLeadForm && (
-          <button className="btn btn-primary" onClick={handleShowLeadForm}>
-            Lead
-          </button>
-        )} */}
-      {/* </div> */} */
-    </Layout>
+    <div >
+     <div>
+     <Navbar />
+     </div>
+   <div className="row">
+   <div className="col-md-3">
+        <Sidebar />
+        </div>
+        <div className="col-md-9">
+          
+          <div>
+            <Outlet />
+        <Routes>
+        <Route index element={<UserList />} /> {/* Default dashboard route */}
+          <Route path="user" element={<UserList />} />
+          <Route path="lead" element={<LeadForm />} />
+          <Route path="followup" element={<FollowUp />} />
+          <Route path="timesheet" element={<TimesheetList />} />
+      </Routes>
+      </div>
+        </div>
+   </div>
+    </div>
   );
 };
 

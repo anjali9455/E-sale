@@ -1,7 +1,8 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Route, Routes } from 'react-router-dom';
-import {Sidebar} from './Sidebar'; // Import the Sidebar component
+import {Sidebar} from '../pages/Sidebar'; // Import the Sidebar component
+import Navbar from './Navbar';
 
  export const SidebarLayout = () => {
   return (
@@ -9,6 +10,9 @@ import {Sidebar} from './Sidebar'; // Import the Sidebar component
       <div className="row">
         <div className="col-md-3">
           <Sidebar />
+          <div>
+          <Navbar/>
+          </div>
         </div>    
         <div className="col-md-9">
           <Routes>

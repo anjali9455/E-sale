@@ -6,6 +6,7 @@ const UserModel = require('../models/User');
 // Route for creating a new user
 router.post('/', (req, res) => {
   const userData = req.body;
+  
   UserModel.create(userData)
     .then((user) => {
       res.json(user);

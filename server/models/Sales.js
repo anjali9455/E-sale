@@ -5,8 +5,15 @@ const SalesSchema =new mongoose.Schema
 ({
     name: String,
  email: String,
-    password: String
-    
+    password: String,
+    tokens: [
+        {
+          token: {
+            type: String,
+            required: true,
+          },
+        },
+      ],
 
 })
 // const UsersSchema = new mongoose.Schema({

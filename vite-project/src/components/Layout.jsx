@@ -23,31 +23,31 @@
 // };
 
 // export default Layout;
-// Layout.jsx
-import React from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { Route, Routes } from 'react-router-dom';
-import Navbar from './Navbar';
-import { Sidebar } from './Sidebar'; // Import the Sidebar component
-import UserList from './UserList';
+// // Layout.jsx
+// import React from 'react';
+// import 'bootstrap/dist/css/bootstrap.min.css';
+// import { Route, Routes } from 'react-router-dom';
+// import Navbar from './Navbar';
+// import { Sidebar } from '../pages/Sidebar'; // Import the Sidebar component
+// import UserList from './UserList';
 
-export const SidebarLayout = () => {
-  return (
-    <div className="container-fluid">
-      <div className="row">
-        <div className="col-md-3 bg-dark">
-          <Sidebar />
+// export const SidebarLayout = () => {
+//   return (
+//     <div className="container-fluid">
+//       <div className="row">
+//         <div className="col-md-3 bg-dark">
+//           <Sidebar />
 
-        </div>
-        <div className="col-md-9">
-          <Navbar />
-          <Routes>
+//         </div>
+//         <div className="col-md-9">
+//           <Navbar />
+//           <Routes>
             
-          </Routes>
-        </div>
-      </div>
-    </div>
-  );
-};
+//           </Routes>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
 
-export default SidebarLayout;
+// export default SidebarLayout;
