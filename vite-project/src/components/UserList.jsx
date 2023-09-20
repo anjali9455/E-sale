@@ -422,12 +422,10 @@ const UserList = () => {
         </div>
       </div>
       <div className="mb-3">
-        <button onClick={() => openAddUserModal(null)} className="btn btn-primary">
+        <button onClick={() => setShowAddUser(true)} className="btn btn-primary">
           + Add User
         </button>
-        <button className="btn btn-danger ml-2">
-          Delete
-        </button>
+        <button className="btn btn-danger ml-2">Delete</button>
       </div>
       <table className="table table-success table-striped">
         <thead>
@@ -441,7 +439,7 @@ const UserList = () => {
         </thead>
         <tbody>
           {users.map((user) => (
-            <tr key={user.id}> {/* Provide a unique key using user.id */}
+            <tr key={user.id}>
               <td>
                 <input type="checkbox" />
               </td>
@@ -462,7 +460,23 @@ const UserList = () => {
       </table>
 
       {/* AddUser modal */}
-      {showAddUser && <AddUser userId={selectedUserId} onClose={closeAddUserModal} onUpdateUsers={addUserToList} />}
+      {showAddUser && (
+        <div className="modal" tabIndex="-1" role="dialog" style={{ display: "block" }}>
+          <div className="modal-dialog" role="document">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Add User</h5>
+                <button type="button" className="close" data-dismiss="modal" aria-label="Close" onClick={closeAddUserModal}>
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div className="modal-body">
+                <AddUser userId={selectedUserId} onClose={closeAddUserModal} onUpdateUsers={addUserToList} />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

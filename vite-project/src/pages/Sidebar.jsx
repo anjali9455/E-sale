@@ -107,6 +107,7 @@ import leadIcon from './images/Lead.png';
 import timesheetIcon from './images/Timesheet.png';
 import settingIcon from './images/Setting.png';
 import '../styles/Sidebar.css'; 
+import Navbar from '../components/Navbar';
 const Sidebar = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
 

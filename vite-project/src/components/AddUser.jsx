@@ -148,6 +148,7 @@
 // export default AddUser;
 import React, { Component } from "react";
 import axios from "axios";
+import "../styles/AddUser.css";
 
 
 class AddUser extends Component {
@@ -179,7 +180,7 @@ class AddUser extends Component {
   }));
 };
   handleSave = () => {
-    const { userId, onClose, onUpdateUsers } = this.props;
+    const { userId,  onUpdateUsers } = this.props;
     const { formData } = this.state;
 
     // ... (previous code for updating or creating a user) ...
@@ -218,8 +219,19 @@ class AddUser extends Component {
   render() {
     // const { formData, createdUser } = this.state;
     const { formData, error } = this.state;
+    const { onClose } = this.props;
     return (
-      <div className="container">
+      <div className="modal-dialog" role="document">
+      <div className="modal-content">
+        <div className="modal-header">
+          <h5 className="modal-title" id="addUserModalTitle">
+            Add User
+          </h5>
+          <button type="button" className="close" onClick={onClose}>
+              <span aria-hidden="true">&times;</span>
+              </button>
+        </div>
+        <div className="modal-body">
         <form>
           <div className="mb-3">
             <label htmlFor="name" className="form-label">
@@ -285,7 +297,7 @@ class AddUser extends Component {
               onChange={this.handleChange}
             />
           </div>
-          <button
+          {/* <button
             type="button"
             className="btn btn-primary"
             onClick={this.handleSave}
@@ -301,10 +313,21 @@ class AddUser extends Component {
           </button>
 
           {error && <div className="alert alert-danger">{error}</div>}
-        </form>
+        </form> */}
+             </form>
+            {error && <div className="alert alert-danger">{error}</div>}
+          </div>
+          <div className="modal-footer">
+          <button type="button" className="btn btn-secondary" onClick={onClose}>
+              Cancel
+            </button>
+            <button type="button" className="btn btn-primary" onClick={this.handleSave}>
+              Save
+            </button>
+          </div>
+        </div>
       </div>
     );
   }
 }
-
 export default AddUser;

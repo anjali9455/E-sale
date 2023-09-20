@@ -28,11 +28,12 @@ const AddFollowup = ({ onSaveFollowup, onClose }) => {
 
     // Call the onSaveFollowup function from the parent component
     // onSaveFollowup(newFollowup);
-
+    onSaveFollowup(newFollowup);
     // Clear the form fields
     axios.post('http://localhost:3001/api/follow', newFollowup)
     .then((response) => {
       console.log('Follow-up saved successfully:', response.data);
+      console.log('Fetched follow-ups:', response.data);
       setLeadId('');
       setDate('');
       setTime('');

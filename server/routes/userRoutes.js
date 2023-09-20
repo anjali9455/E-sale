@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const UsersModel = require('../models/'); // Import your user model
+const { getUsers } = require('../controller/userController');
 
 // Handle PUT request to update user details
 router.post('/register',usersController.registerUsers);
@@ -28,6 +29,11 @@ router.put('/update', async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 });
+
+router.get('/', getUsers );
+router.post('/', getUsers );
+router.delete('/', getUsers );
+router.put('/', getUsers );
 
 
 

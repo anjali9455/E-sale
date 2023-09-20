@@ -7,12 +7,14 @@ import Navbar from './Navbar';
  export const SidebarLayout = () => {
   return (
     <div className="container">
+       <div>
+          {/* <Navbar/> */}
+          jhagsxjhasg
+          </div>
       <div className="row">
         <div className="col-md-3">
-          <Sidebar />
-          <div>
-          <Navbar/>
-          </div>
+          {/* <Sidebar /> */}
+         
         </div>    
         <div className="col-md-9">
           <Routes>

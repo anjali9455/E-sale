@@ -119,6 +119,7 @@ const FollowUp = () => {
     axios
       .get("http://localhost:3001/api/follow")
       .then((response) => {
+        console.log('Fetched follow-ups:', response.data);;
         setFollowUps(response.data);
       })
       .catch((error) => {

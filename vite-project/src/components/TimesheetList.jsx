@@ -366,7 +366,7 @@ const TimesheetList = () => {
   const [showAddNewForm, setShowAddNewForm] = useState(false);
   const [totalPages, setTotalPages] = useState(0);
   const [selectedTimesheetIds, setSelectedTimesheetIds] = useState([]);
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
   useEffect(() => {
     // Fetch timesheet data from your backend API here
     Axios.get("http://localhost:3001/api/timesheet")
@@ -380,12 +380,23 @@ const TimesheetList = () => {
   }, []);
 
   const openAddNewForm = () => {
-    setShowAddNewForm(true);
+    // Show the modal by triggering Bootstrap modal using its ID
+    const modal = document.getElementById("exampleModalLong");
+    modal.classList.add("show");
+    modal.style.display = "block";
+    document.body.classList.add("modal-open");
+    setShowAddNewForm(true)
   };
 
   const closeAddNewForm = () => {
-    setShowAddNewForm(false);
+    // Close the modal
+    const modal = document.getElementById("exampleModalLong");
+    modal.classList.remove("show");
+    modal.style.display = "none";
+    document.body.classList.remove("modal-open");
+    setShowAddNewForm(false)
   };
+
 
   const handleAddTimesheet = (newTimesheet) => {
     Axios.post("http://localhost:3001/api/timesheet", newTimesheet)
@@ -427,10 +438,11 @@ const TimesheetList = () => {
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h1>Timesheet List</h1>
         <div className="d-flex">
-          <button className="btn btn-primary" onClick={openAddNewForm}>
+        <button className="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong"
+                    onClick={openAddNewForm}  >
             + Add New
           </button>
-          <button className="btn btn-danger ml-2"onClick={deleteSelectedTimesheets}>
+          <button className="btn btn-danger ml-2" onClick={deleteSelectedTimesheets}>
             Delete
           </button>
         </div>
@@ -509,7 +521,10 @@ const TimesheetList = () => {
         </nav>
       </div>
       {showAddNewForm && (
-        <AddTimesheet
+        <AddTimesheet onAddTimesheet={handleAddTimesheet} onCloseForm={closeAddNewForm} />
+      )}
+      {isModalOpen && (
+        <AddTimesheetModal
           onAddTimesheet={handleAddTimesheet}
           onCloseForm={closeAddNewForm}
         />

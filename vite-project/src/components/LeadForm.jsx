@@ -523,6 +523,7 @@ const LeadForm = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [leadsPerPage] = useState(5); // Set the number of leads per page
   const [showAddLeadForm, setShowAddLeadForm] = useState(false); // State for showing/hiding Add Lead Form
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     // Fetch leads data from your backend API
@@ -571,14 +572,68 @@ const LeadForm = () => {
     // For example, maintain a list of selected lead IDs in the component state
   };
 
+
+  
+
+  const handleToggleModal = () => {
+    setShowModal(!showModal);
+  };
+
   return (
     <div className="container mt-4">
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h1>Lead List</h1>
         <div className="d-flex">
-          <button className="btn btn-primary" onClick={openAddLeadForm}>
+          {/* <button onClick={()=>formOpen()} className="btn btn-primary">
+         
             + Add Lead
-          </button>
+          </button> */}
+         
+          <div>
+      <button
+        type="button"
+        className="btn btn-primary"
+        onClick={handleToggleModal}
+      >
+        Add Lead
+      </button>
+
+      {showModal && (
+        <div
+          className="modal fade show"
+          tabIndex="-1"
+          role="dialog"
+          aria-labelledby="exampleModalLabel"
+          aria-hidden="true"
+          style={{ display: 'block', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
+        >
+          <div className="modal-dialog" role="document">
+            <div className="modal-content">
+              <div className="modal-header">
+               Add lead
+                
+              </div>
+              <div className="modal-body">
+                gf
+              </div>
+              {/* <div className="modal-body">...</div> */}
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={handleToggleModal}
+                >
+                  Close
+                </button>
+                <button type="button" className="btn btn-primary">
+                  Save changes
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
           <button className="btn btn-danger ml-2">Delete</button>
         </div>
       </div>
@@ -614,10 +669,10 @@ const LeadForm = () => {
                     </td>
                     <td>{lead.FirstName || ""}</td>
                     <td>{lead.LastName || ""}</td>
-                    <td>{lead.city || ""}</td>
+                    <td>{lead.City || ""}</td>
                     <td>{lead.leadType || ""}</td>
-                    <td>{lead.nextFollowUp || ""}</td>
-                    <td>{lead.location || ""}</td>
+                    <td>{lead.NextFollowUp || ""}</td>
+                    <td>{lead.Location || ""}</td>
                     <td>
                       <button className="btn btn-warning">Edit</button>
                     </td>
@@ -649,9 +704,9 @@ const LeadForm = () => {
             </ul>
           </nav>
 
-          {showAddLeadForm && (
-            <AddLeadForm onSaveLead={handleSaveLead} onClose={closeAddLeadForm} />
-          )}
+     
+          <AddLeadForm onSaveLead={handleSaveLead} onClose={closeAddLeadForm} />
+         
         </div>
       )}
     </div>

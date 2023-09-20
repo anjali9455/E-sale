@@ -148,7 +148,7 @@ app.post('/api/lead', (req, res) => {
 
 
 app.get('/api/lead', (req, res) => {
-  LeadModel.find({})
+  LeadModel.find({ })
     .then((lead) => {
       res.json(lead);
     })
@@ -188,7 +188,9 @@ app.get('/api/follow', (req, res) => {
 app.post('/api/timesheet', (req, res) => {
   console.log('Received Timesheet Request:', req.body); 
   const timesheetData = req.body;
+  timesheetData._id = new mongoose.Types.ObjectId(); 
   TimesheetModel.create(timesheetData)
+  
     .then((timesheet) => {
       res.json(timesheet);
     })

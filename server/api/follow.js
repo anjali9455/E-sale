@@ -5,14 +5,16 @@ const FollowModel = require('../models/Follow');
 // Route for creating a new follow-up
 router.post('/', async (req, res) => {
   try {
-    const followData = req.body;
+    // const followData = req.body;
+    const { _id, ...followData } = req.body
     const follow = await FollowModel.create(followData);
     res.json(follow);
   } catch (error) {
     console.error('Error creating follow-up:', error);
-    res.status(500).json({ error: 'Error creating follow-up' });
+    res.status(500).json({ error: 'Error creating follow-up', details: error.message });
   }
 });
+
 
 // Route for retrieving all follow-ups
 router.get('/', async (req, res) => {

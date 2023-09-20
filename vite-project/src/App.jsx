@@ -94,14 +94,14 @@
 //           <Route path="login" element={<Login />} />
 //           <Route path="register" element={<Register />} />
 
-//           {/* Dashboard route and nested routes */}
-//           <Route path="dashboard/*" element={<DashboardLayout />}>
-//             <Route path="/" element={<UserList />} /> {/* Default dashboard route */}
-//             <Route path="user" element={<UserList />} />
-//             <Route path="lead" element={<LeadForm />} />
-//             <Route path="followup" element={<FollowUp />} />
-//             <Route path="timesheet" element={<TimesheetList />} />
-//           </Route>
+          // {/* Dashboard route and nested routes */}
+          // <Route path="dashboard/*" element={<DashboardLayout />}>
+          //   <Route path="/" element={<UserList />} /> {/* Default dashboard route */}
+          //   <Route path="user" element={<UserList />} />
+          //   <Route path="lead" element={<LeadForm />} />
+          //   <Route path="followup" element={<FollowUp />} />
+          //   <Route path="timesheet" element={<TimesheetList />} />
+          // </Route>
 
 //           {/* Add other routes as needed */}
 //       {/* </div> */}
@@ -136,7 +136,22 @@ function App() {
         <Route path="register" element={<Register />} />
 
         {/* Dashboard route and nested routes */}
-        <Route path="dashboard/*" element={<DashboardLayout />} />
+        {/* <Route path="dashboard/*" element={<DashboardLayout />} /> */}
+
+          {/* Dashboard route and nested routes */}
+          <Route path="dashboard/*" element={<DashboardLayout />}>
+            {/* <Route index path="/" element={<UserList />} /> 
+            <Route path="user" element={<UserList />} />
+            <Route path="lead" element={<LeadForm />} />
+            <Route path="followup" element={<FollowUp />} />
+            <Route path="timesheet" element={<TimesheetList />} /> */}
+            <Route index element={<UserList />} />
+              <Route path="user" element={<UserList />} />
+              <Route path="lead" element={<LeadForm />} />
+              <Route path="followup" element={<FollowUp />} />
+              <Route path="timesheet" element={<TimesheetList />} />
+          </Route>
+
         
 
         {/* Add other routes as needed */}

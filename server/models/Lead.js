@@ -16,24 +16,24 @@ FirstName: {
   },
   PhoneNumbers:{
     type:[String],
-    required: true,
+    required: false,
   },
   City :{
     type:String,
     required:true,
   },
-  leadType :{
+  Type :{
     type:String,
-    required:true,
+    required:false,
   },
   NextFollowUp: {
     type:String,
     required:true,
-  } ,
-  Location :{
+  } , 
+  Location:{
     type:String,
     required:true,
-  }
+  } 
 
 });
 

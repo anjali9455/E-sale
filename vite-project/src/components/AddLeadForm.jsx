@@ -178,11 +178,11 @@ class AddLeadForm extends Component {
             formData: {
                 FirstName: "",
                 LastName: "",
-                city: "",
+                City: "",
                 leadType: "",
-                nextFollowUp: "",
-                location: "",
-                status: "",
+                NextFollowUp: "",
+                Location: "",
+               
             },
             createdLead: null,
         };
@@ -195,53 +195,61 @@ class AddLeadForm extends Component {
         });
     };
 
-    handleSave = async () => {
-        const { onClose, onUpdateLead } = this.props;
-        const { formData } = this.state;
-        if (
-            !formData.FirstName ||
-            !formData.LastName ||
-            !formData.City ||
-            !formData.LeadType ||
-            !formData.NextFollowUp ||
-            !formData.Location
-          ) {
-            alert('Please fill in all required fields.');
-            return;
-          }
-        // Create a new lead
-        await axios.post("http://localhost:3001/api/lead", {FirstName: formData.FirstName,
-        LastName: formData.LastName,
-        city: formData.City,
-        leadType: formData.LeadType,
-        nextFollowUp: formData.NextFollowUp,
-        location: formData.Location,})
-            .then((response) => {
-                console.log("New lead created:", response.data);
-                // onUpdateLead(response.data); // Call the onUpdateLead function to add the new lead to the list
-                onClose();
-            })
-            .catch((error) => {
-                console.log("Error creating a new lead:", error);
-                alert("Failed to create a new lead. Please try again.");
-            });
-    };
+    
 
-    handleCancel = () => {
-        // Handle cancel action here (e.g., clearing the form fields)
-        this.setState({
-            formData: {
-                FirstName: "",
-                LastName: "",
-                city: "",
-                leadType: "",
-                nextFollowUp: "",
-                location: "",
-                status: "",
-            },
-        });
-        this.props.onClose(); // Close the Add Lead Form
-    };
+  handleSave = async () => {
+    console.log('Form Data:', this.state.formData);
+    console.log('handleSave function called');
+    const { onClose } = this.props;
+    const { formData } = this.state;
+
+    if (
+      !formData.FirstName ||
+      !formData.LastName ||
+      !formData.City ||
+      !formData.leadType ||
+      !formData.NextFollowUp ||
+      !formData.Location
+    ) {
+      console.error('Please fill in all required fields');
+      return;
+    }
+
+    try {
+      await axios.post('http://localhost:3001/api/lead', {
+        FirstName: formData.FirstName,
+        LastName: formData.LastName,
+        City: formData.City,
+        leadType: formData.leadType,
+        NextFollowUp: formData.NextFollowUp,
+        Location: formData.Location,
+        // Add other fields as needed
+      });
+
+      console.log('New lead created');
+      onClose();
+    } catch (error) {
+      console.error('Error creating a new lead:', error);
+      alert('Failed to create a new lead. Please try again.');
+    }
+  };
+
+  handleCancel = () => {
+    this.setState({
+        formData: {
+            FirstName: "",
+            LastName: "",
+            City: "",
+            leadType: "",
+            NextFollowUp: "",
+            Location: "",
+            status: "",
+        },
+    });
+
+    this.props.onClose();
+};
+
 
     render() {
         const { formData } = this.state;
@@ -283,9 +291,9 @@ class AddLeadForm extends Component {
                         <input
                             type="text"
                             className="form-control"
-                            id="city"
-                            name="city"
-                            value={formData.city}
+                            id="City"
+                            name="City"
+                            value={formData.City}
                             onChange={this.handleInputChange}
                         />
                     </div>
@@ -309,9 +317,9 @@ class AddLeadForm extends Component {
                         <input
                             type="date"
                             className="form-control"
-                            id="nextFollowUp"
-                            name="nextFollowUp"
-                            value={formData.nextFollowUp}
+                            id="NextFollowUp"
+                            name="NextFollowUp"
+                            value={formData.NextFollowUp}
                             onChange={this.handleInputChange}
                         />
                     </div>
@@ -322,9 +330,9 @@ class AddLeadForm extends Component {
                         <input
                             type="text"
                             className="form-control"
-                            id="location"
-                            name="location"
-                            value={formData.location}
+                            id="Location"
+                            name="Location"
+                            value={formData.Location}
                             onChange={this.handleInputChange}
                         />
                     </div>
