@@ -87,10 +87,22 @@ const FollowUp = () => {
 
   const itemsPerPage = 10;
 
-  const handleSaveFollowUp = (newFollowUp) => {
+  useEffect(() => {
+    axios
+      .get("http://localhost:3001/api/follow")
+      .then((response) => {
+        console.log('Fetched follow-ups:', response.data);;
+        setFollowUps(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching follow-up data:", error);
+      });
+  }, []);
+
+  const handleSaveFollowUp = (newFollowup) => {
     // Generate a unique ID for the new follow-up
-    newFollowUp.id = Date.now().toString();
-    setFollowUps([...followUps, newFollowUp]);
+    newFollowup.id = Date.now().toString();
+    setFollowUps([...followUps, newFollowup]);
   };
 
   const deleteFollowUp = (id) => {
@@ -102,6 +114,8 @@ const FollowUp = () => {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentFollowUps = followUps.slice(startIndex, endIndex);
+
+  
 
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
@@ -115,17 +129,7 @@ const FollowUp = () => {
     setShowAddFollowUp(false);
   };
 
-  useEffect(() => {
-    axios
-      .get("http://localhost:3001/api/follow")
-      .then((response) => {
-        console.log('Fetched follow-ups:', response.data);;
-        setFollowUps(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching follow-up data:", error);
-      });
-  }, []);
+  
 
   return (
     <div className="container mt-4">
@@ -225,11 +229,32 @@ const FollowUp = () => {
         </nav>
       </div>
       {showAddFollowUp && (
-        <AddFollowUp
-          onClose={closeAddFollowUpModal}
-          onSaveFollowup={handleSaveFollowUp}
-        />
+        <div className="modal fade show" style={{ display: "block" }}>
+          <div className="modal-dialog" role="document">
+            <div className="modal-content">
+              {/* <div className="modal-header">
+                <h5 className="modal-title">Add Follow-up</h5>
+                <button
+                  type="button"
+                  className="close"
+                  data-dismiss="modal"
+                  aria-label="Close"
+                  onClick={closeAddFollowUpModal}
+                >
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div> */}
+              <div className="modal-body">
+                <AddFollowUp
+                  onClose={closeAddFollowUpModal}
+                  onSaveFollowup={handleSaveFollowUp}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
       )}
+
     </div>
   );
 };

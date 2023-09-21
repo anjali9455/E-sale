@@ -524,7 +524,7 @@ const LeadForm = () => {
   const [leadsPerPage] = useState(5); // Set the number of leads per page
   const [showAddLeadForm, setShowAddLeadForm] = useState(false); // State for showing/hiding Add Lead Form
   const [showModal, setShowModal] = useState(false);
-
+  const [selectedLeadIds, setSelectedLeadIds] = useState([])
   useEffect(() => {
     // Fetch leads data from your backend API
     fetch("http://localhost:3001/api/lead")
@@ -572,11 +572,42 @@ const LeadForm = () => {
     // For example, maintain a list of selected lead IDs in the component state
   };
 
-
+  const openAddLeadModel = (LeadIds) => {
+    // const modal = document.getElementById("exampleModalLong");
+    // if (modal) {
+    //   modal.classList.add("show");
+    //   modal.style.display = "block";
+    //   document.body.classList.add("modal-open");
+    //   setShowAddNewForm(true);
+    // } else {
+    //   console.error("Modal element not found.");
+    // }
+    setSelectedLeadIds(LeadIds);
+    setShowAddLeadForm(LeadIds);
+  };
   
-
+  const closeAddLeadModal = () => {
+    // Clear the selected user for editing
+    setSelectedLeadIds(null);
+    setShowAddLeadForm(false);
+  };
   const handleToggleModal = () => {
     setShowModal(!showModal);
+  };
+  const deleteSelectedleads = () => {
+    // Implement the logic to delete selected leads here
+    // You can use the selectedLeadIds state to determine which leads to delete
+    // For example, send a DELETE request to your API for each selected lead
+    selectedLeadIds.forEach(async (leadId) => {
+      try {
+        await axios.delete(`http://localhost:3001/api/lead/${leadId}`);
+        // Update your leads state after deletion
+        setLeads((prevLeads) => prevLeads.filter((lead) => lead._id !== leadId));
+      } catch (error) {
+        console.error(`Error deleting lead with ID ${leadId}:`, error);
+        alert(`Failed to delete lead with ID ${leadId}. Please try again.`);
+      }
+    });
   };
 
   return (
@@ -593,48 +624,13 @@ const LeadForm = () => {
       <button
         type="button"
         className="btn btn-primary"
-        onClick={handleToggleModal}
+        onClick={openAddLeadForm}
       >
         Add Lead
       </button>
-
-      {showModal && (
-        <div
-          className="modal fade show"
-          tabIndex="-1"
-          role="dialog"
-          aria-labelledby="exampleModalLabel"
-          aria-hidden="true"
-          style={{ display: 'block', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
-        >
-          <div className="modal-dialog" role="document">
-            <div className="modal-content">
-              <div className="modal-header">
-               Add lead
-                
-              </div>
-              <div className="modal-body">
-                gf
-              </div>
-              {/* <div className="modal-body">...</div> */}
-              <div className="modal-footer">
-                <button
-                  type="button"
-                  className="btn btn-secondary"
-                  onClick={handleToggleModal}
-                >
-                  Close
-                </button>
-                <button type="button" className="btn btn-primary">
-                  Save changes
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
-          <button className="btn btn-danger ml-2">Delete</button>
+          
+    <button className="btn btn-danger ml-2" onClick={deleteSelectedleads}>Delete</button>
         </div>
       </div>
 
@@ -704,9 +700,24 @@ const LeadForm = () => {
             </ul>
           </nav>
 
-     
-          <AddLeadForm onSaveLead={handleSaveLead} onClose={closeAddLeadForm} />
-         
+   {showAddLeadForm && (
+  <div className="modal" tabIndex="-1" role="dialog" style={{ display: "block" }}>
+    <div className="modal-dialog" role="document">
+      <div className="modal-content">
+      
+        <div className="modal-body">
+          <AddLeadForm
+            onSaveLead={handleSaveLead}
+            onClose={closeAddLeadModal}
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+)}
+
+
+          {/* <AddLeadForm onSaveLead={handleSaveLead} onClose={closeAddLeadForm} /> */}
         </div>
       )}
     </div>

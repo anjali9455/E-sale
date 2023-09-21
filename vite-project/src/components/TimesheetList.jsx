@@ -353,7 +353,198 @@
 //   );
 // };
 
+// // export default TimesheetList;
+// import React, { useState, useEffect } from "react";
+// import Axios from "axios";
+// import "bootstrap/dist/css/bootstrap.min.css";
+// import AddTimesheet from "./AddTimesheet";
+
+// const TimesheetList = () => {
+//   const [timesheets, setTimesheets] = useState([]);
+//   const [currentPage, setCurrentPage] = useState(1);
+//   const itemsPerPage = 10;
+//   const [showAddNewForm, setShowAddNewForm] = useState(false);
+//   const [totalPages, setTotalPages] = useState(0);
+//   const [selectedTimesheetIds, setSelectedTimesheetIds] = useState([]);
+//   const [isModalOpen, setIsModalOpen] = useState(false);
+//   useEffect(() => {
+//     // Fetch timesheet data from your backend API here
+//     Axios.get("http://localhost:3001/api/timesheet")
+//       .then((response) => {
+//         setTimesheets(response.data);
+//         setTotalPages(Math.ceil(response.data.length / itemsPerPage));
+//       })
+//       .catch((error) => {
+//         console.error("Error fetching data:", error);
+//       });
+//   }, []);
+
+//   const openAddNewForm = () => {
+//     // Get the modal element
+//     const modal = document.getElementById("exampleModalLong");
+    
+//     // Check if the modal element exists before trying to access its classList
+//     if (modal) {
+//       modal.classList.add("show");
+//       modal.style.display = "block";
+//       document.body.classList.add("modal-open");
+//       setShowAddNewForm(true);
+//     } else {
+//       console.error("Modal element not found.");
+//     }
+//   };
+  
+//   const closeAddNewForm = () => {
+//     // Close the modal
+//     const modal = document.getElementById("exampleModalLong");
+//     modal.classList.remove("show");
+//     modal.style.display = "none";
+//     document.body.classList.remove("modal-open");
+//     setShowAddNewForm(false)
+//   };
+
+//   // const closeAddNewForm = () => {
+//   //   // Close the modal by setting isModalOpen to false
+//   //   setIsModalOpen(false);
+//   // };
+
+
+//   const handleAddTimesheet = (newTimesheet) => {
+//     Axios.post("http://localhost:3001/api/timesheet", newTimesheet)
+//       .then((response) => {
+//         setTimesheets([...timesheets, response.data]);
+//         closeAddNewForm();
+//         setTotalPages(Math.ceil((timesheets.length + 1) / itemsPerPage));
+//       })
+//       .catch((error) => {
+//         console.error("Error adding timesheet:", error);
+//       });
+//   };
+
+//   const handleCheckboxChange = (timesheetId) => {
+//     const updatedSelectedTimesheetIds = selectedTimesheetIds.includes(timesheetId)
+//       ? selectedTimesheetIds.filter((id) => id !== timesheetId)
+//       : [...selectedTimesheetIds, timesheetId];
+//     setSelectedTimesheetIds(updatedSelectedTimesheetIds);
+//   };
+
+//   const deleteSelectedTimesheets = () => {
+//     const updatedTimesheets = timesheets.filter(
+//       (timesheet) => !selectedTimesheetIds.includes(timesheet.id)
+//     );
+//     setTimesheets(updatedTimesheets);
+//     setSelectedTimesheetIds([]);
+//   };
+
+//   // Calculate the current page's timesheets based on pagination
+//   const indexOfLastTimesheet = currentPage * itemsPerPage;
+//   const indexOfFirstTimesheet = indexOfLastTimesheet - itemsPerPage;
+//   const currentTimesheets = timesheets.slice(
+//     indexOfFirstTimesheet,
+//     indexOfLastTimesheet
+//   );
+
+//   // const openAddNewForm = () => {
+//   //   // Show the modal by setting isModalOpen to true
+//   //   setIsModalOpen(true);
+//   // };
+
+//   return (
+//     <div className="container mt-4">
+//       <div className="d-flex justify-content-between align-items-center mb-4">
+//         <h1>Timesheet List</h1>
+//         <div className="d-flex">
+//         <button className="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong"
+//                     onClick={openAddNewForm}  >
+//             + Add New
+//           </button>
+//           <button className="btn btn-danger ml-2" onClick={deleteSelectedTimesheets}>
+//             Delete
+//           </button>
+//         </div>
+//       </div>
+//       {/* Timesheet table */}
+//       <div className="table-responsive">
+//         <table className="table table-success table-striped">
+//           {/* Table headers */}
+//           <thead>
+//             <tr >
+//               <th>User Checkbox</th>
+//               <th>Date</th>
+//               <th>Last Follow-Up</th>
+//               <th>Next Follow-Up</th>
+//               <th>Status</th>
+//               <th>Contact List</th>
+//               <th>Action</th>
+//             </tr>
+//           </thead>
+//           {/* Table body */}
+//           <tbody>
+//           {currentTimesheets.map((timesheet) => (
+//           <tr key={timesheet.id}>
+//             <td>
+//               <input
+//                 type="checkbox"
+//                 checked={selectedTimesheetIds.includes(timesheet.id)}
+//                 onChange={() => handleCheckboxChange(timesheet.id)}
+//               />
+//             </td>
+//                 <td>{timesheet.Date}</td>
+//                 <td>{timesheet.LastFollowUp}</td>
+//                 <td>{timesheet.NextFollowUp}</td>
+//                 <td>{timesheet.Status}</td>
+//                 <td>
+//                   <ul>
+//                     {timesheet.AddContact.map((contact, index) => (
+//                       <li key={index}>{contact}</li>
+//                     ))}
+//                   </ul>
+//                 </td>
+//                 <td>
+//                   <button className="btn btn-warning">Edit</button>
+//                 </td>
+//               </tr>
+//             ))}
+//           </tbody>
+//         </table>
+//       </div>
+//       {/* Pagination */}
+//       <div className="d-flex justify-content-center">
+//         <nav aria-label="Page navigation example">
+//           <ul className="pagination">
+//             <li className={`page-item ${currentPage === 1 && "disabled"}`}>
+//               <button
+//                 className="page-link"
+//                 onClick={() => setCurrentPage(currentPage - 1)}
+//               >
+//                 Previous
+//               </button>
+//             </li>
+//             {/* Add pagination logic here */}
+//             <li
+//               className={`page-item ${
+//                 currentPage === totalPages && "disabled"
+//               }`}
+//             >
+//               <button
+//                 className="page-link"
+//                 onClick={() => setCurrentPage(currentPage + 1)}
+//               >
+//                 Next
+//               </button>
+//             </li>
+//           </ul>
+//         </nav>
+//       </div>
+//       {showAddNewForm && (
+//         <AddTimesheet onAddTimesheet={handleAddTimesheet} onCloseForm={closeAddNewForm} />
+//       )}
+//     </div>
+//   );
+// };
+
 // export default TimesheetList;
+// // 
 import React, { useState, useEffect } from "react";
 import Axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -366,7 +557,8 @@ const TimesheetList = () => {
   const [showAddNewForm, setShowAddNewForm] = useState(false);
   const [totalPages, setTotalPages] = useState(0);
   const [selectedTimesheetIds, setSelectedTimesheetIds] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showAddTimeSheet, setShowAddTimesheet] = useState(false)
+
   useEffect(() => {
     // Fetch timesheet data from your backend API here
     Axios.get("http://localhost:3001/api/timesheet")
@@ -380,26 +572,47 @@ const TimesheetList = () => {
   }, []);
 
   const openAddNewForm = () => {
-    // Show the modal by triggering Bootstrap modal using its ID
-    const modal = document.getElementById("exampleModalLong");
-    modal.classList.add("show");
-    modal.style.display = "block";
-    document.body.classList.add("modal-open");
-    setShowAddNewForm(true)
+    setShowAddNewForm(true);
   };
 
-  const closeAddNewForm = () => {
-    // Close the modal
-    const modal = document.getElementById("exampleModalLong");
-    modal.classList.remove("show");
-    modal.style.display = "none";
-    document.body.classList.remove("modal-open");
-    setShowAddNewForm(false)
+  const openAddTimesheetModel = (timesheetIds) => {
+    // const modal = document.getElementById("exampleModalLong");
+    // if (modal) {
+    //   modal.classList.add("show");
+    //   modal.style.display = "block";
+    //   document.body.classList.add("modal-open");
+    //   setShowAddNewForm(true);
+    // } else {
+    //   console.error("Modal element not found.");
+    // }
+    setSelectedTimesheetIds(timesheetIds);
+    setShowAddTimesheet(timesheetIds);
   };
-
-
+  // const openAddUserModal = (userId) => {
+  //   setSelectedUserId(userId); // Set the selected user ID for editing or null for adding
+  //   setShowAddUser(true);
+  // };
+  const closeAddTimesheetModal = () => {
+    // Clear the selected user for editing
+    setSelectedTimesheetIds(null);
+    setShowAddNewForm(false);
+  };
+  // const closeAddNewForm = () => {
+  //   const modal = document.getElementById("exampleModalLong");
+  //   if (modal) {
+  //     modal.classList.remove("show");
+  //     modal.style.display = "none";
+  //     document.body.classList.remove("modal-open");
+  //     setShowAddNewForm(false);
+  //   } else {
+  //     console.error("Modal element not found.");
+  //   }
+  // };
+  const addTimesheetToList = (onOpenForm) => {
+    setTimesheets([...Timesheets, onOpenForm]);
+  };
   const handleAddTimesheet = (newTimesheet) => {
-    Axios.post("http://localhost:3001/api/timesheet", newTimesheet)
+    Axios.post("http://localhost:3001/api/timesheet", onOpenForm)
       .then((response) => {
         setTimesheets([...timesheets, response.data]);
         closeAddNewForm();
@@ -425,7 +638,6 @@ const TimesheetList = () => {
     setSelectedTimesheetIds([]);
   };
 
-  // Calculate the current page's timesheets based on pagination
   const indexOfLastTimesheet = currentPage * itemsPerPage;
   const indexOfFirstTimesheet = indexOfLastTimesheet - itemsPerPage;
   const currentTimesheets = timesheets.slice(
@@ -438,8 +650,12 @@ const TimesheetList = () => {
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h1>Timesheet List</h1>
         <div className="d-flex">
-        <button className="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong"
-                    onClick={openAddNewForm}  >
+          <button
+            className="btn btn-primary"
+            data-toggle="modal"
+            data-target="#exampleModalLong"
+            onClick={openAddNewForm}
+          >
             + Add New
           </button>
           <button className="btn btn-danger ml-2" onClick={deleteSelectedTimesheets}>
@@ -447,12 +663,10 @@ const TimesheetList = () => {
           </button>
         </div>
       </div>
-      {/* Timesheet table */}
       <div className="table-responsive">
         <table className="table table-success table-striped">
-          {/* Table headers */}
           <thead>
-            <tr >
+            <tr>
               <th>User Checkbox</th>
               <th>Date</th>
               <th>Last Follow-Up</th>
@@ -462,17 +676,16 @@ const TimesheetList = () => {
               <th>Action</th>
             </tr>
           </thead>
-          {/* Table body */}
           <tbody>
-          {currentTimesheets.map((timesheet) => (
-          <tr key={timesheet.id}>
-            <td>
-              <input
-                type="checkbox"
-                checked={selectedTimesheetIds.includes(timesheet.id)}
-                onChange={() => handleCheckboxChange(timesheet.id)}
-              />
-            </td>
+            {currentTimesheets.map((timesheet) => (
+              <tr key={timesheet.id}>
+                <td>
+                  <input
+                    type="checkbox"
+                    checked={selectedTimesheetIds?.includes(timesheet.id)}
+                    onChange={() => handleCheckboxChange(timesheet.id)}
+                  />
+                </td>
                 <td>{timesheet.Date}</td>
                 <td>{timesheet.LastFollowUp}</td>
                 <td>{timesheet.NextFollowUp}</td>
@@ -492,7 +705,6 @@ const TimesheetList = () => {
           </tbody>
         </table>
       </div>
-      {/* Pagination */}
       <div className="d-flex justify-content-center">
         <nav aria-label="Page navigation example">
           <ul className="pagination">
@@ -504,12 +716,7 @@ const TimesheetList = () => {
                 Previous
               </button>
             </li>
-            {/* Add pagination logic here */}
-            <li
-              className={`page-item ${
-                currentPage === totalPages && "disabled"
-              }`}
-            >
+            <li className={`page-item ${currentPage === totalPages && "disabled"}`}>
               <button
                 className="page-link"
                 onClick={() => setCurrentPage(currentPage + 1)}
@@ -521,13 +728,16 @@ const TimesheetList = () => {
         </nav>
       </div>
       {showAddNewForm && (
-        <AddTimesheet onAddTimesheet={handleAddTimesheet} onCloseForm={closeAddNewForm} />
-      )}
-      {isModalOpen && (
-        <AddTimesheetModal
-          onAddTimesheet={handleAddTimesheet}
-          onCloseForm={closeAddNewForm}
-        />
+         <div className="modal" tabIndex="-1" role="dialog" style={{ display: "block" }}>
+       <div className="modal-dialog" role="document">
+         <div className="modal-content">
+
+              <div className="modal-body">
+                <AddTimesheet timesheetIds ={selectedTimesheetIds}  onCloseForm={closeAddTimesheetModal} onUpdateTimesheets={addTimesheetToList} onOpenForm={openAddNewForm} />
+              </div>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

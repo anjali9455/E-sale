@@ -300,7 +300,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import "../styles/AddUser.css";
 
-const AddTimesheet = ({ onAddTimesheet, onCloseForm }) => {
+const AddTimesheet = ({ onAddTimesheet, onCloseForm ,onOpenForm}) => {
   // Define state variables for form fields
   const [date, setDate] = useState("");
   const [lastFollowUp, setLastFollowUp] = useState("");
@@ -308,6 +308,7 @@ const AddTimesheet = ({ onAddTimesheet, onCloseForm }) => {
   const [status, setStatus] = useState("");
   const [addContact, setAddContact] = useState("");
   const [contacts, setContacts] = useState([]);
+  const [error, setError] = useState(null);
   const [deleteFormData, setDeleteFormData] = useState({
     name: "",
     email: "",
@@ -317,6 +318,9 @@ const AddTimesheet = ({ onAddTimesheet, onCloseForm }) => {
     influenceLevel: "",
   });
 
+  const openForm = () => {
+    onOpenForm();
+  };
   // Handle adding a contact to the list
   const handleAddContact = () => {
     if (addContact.trim() !== "") {
@@ -335,7 +339,7 @@ const AddTimesheet = ({ onAddTimesheet, onCloseForm }) => {
   // Handle saving the timesheet
   const handleSave = () => {
     // Create a new timesheet object with the form data
-    const newTimesheet = {
+    const handleSave = {
       Date: date,
       LastFollowUp: lastFollowUp,
       NextFollowUp: nextFollowUp,
@@ -350,7 +354,7 @@ const AddTimesheet = ({ onAddTimesheet, onCloseForm }) => {
       // deleteFormData,
     };
     axios
-      .post("http://localhost:3001/api/timesheet", newTimesheet)
+      .post("http://localhost:3001/api/timesheet", onOpenForm)
       .then((response) => {
         console.log("Timesheet created:", response.data);
         onAddTimesheet(response.data); // Assuming this function adds the new Timesheet to your UI
@@ -370,7 +374,7 @@ const AddTimesheet = ({ onAddTimesheet, onCloseForm }) => {
           
           role: "",
           influenceLevel: "",
-        });
+        });setError(null);
       })
       .catch((error) => {
         console.error("Error creating Timesheet:", error);
@@ -405,31 +409,16 @@ const AddTimesheet = ({ onAddTimesheet, onCloseForm }) => {
   
 
   return (
-<div
-      className="modal fade"
-      id="exampleModalLong"
-      tabIndex="-1"
-      role="dialog"
-      aria-labelledby="exampleModalLongTitle"
-      aria-hidden="true"
-    >
-      <div className="modal-dialog" role="document">
-        <div className="modal-content">
-          <div className="modal-header">
-            <h5 className="modal-title" id="exampleModalLongTitle">
-              Add New Timesheet
-            </h5>
-            <button
-              type="button"
-              className="close"
-              data-dismiss="modal"
-              aria-label="Close"
-              onClick={onCloseForm}
-            >
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div className="modal-body">
+    <div className="modal-dialog" role="document">
+      <div className="modal-content">
+        <div className="modal-header">
+          <h5 className="modal-title" id="addTimesheetModalTitle">
+         Add New Timesheet</h5>
+          <button type="button" className="close" onClick={onCloseForm}>
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div className="modal-body">
       <form>
         {/* Date input */}
         
@@ -620,7 +609,7 @@ const AddTimesheet = ({ onAddTimesheet, onCloseForm }) => {
         </div>
 
         {/* Save and Cancel buttons */}
-        <button
+        {/* <button
           className="btn btn-success"
           type="button"
           onClick={handleSave}
@@ -634,12 +623,21 @@ const AddTimesheet = ({ onAddTimesheet, onCloseForm }) => {
           onClick={onCloseForm}
         >
           Cancel
-        </button>
+        </button> */}
       </form>
+      {error && <div className="alert alert-danger">{error}</div>}
+          </div>
+          <div className="modal-footer">
+          <button type="button" className="btn btn-secondary" onClick={closeAddNewForm}>
+              Cancel
+            </button>
+            <button type="button" className="btn btn-primary" onClick={handleSave}>
+              Save
+            </button>
     </div>
     </div>
         </div>
-      </div>
+      
     
   );
 };

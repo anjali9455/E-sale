@@ -464,12 +464,7 @@ const UserList = () => {
         <div className="modal" tabIndex="-1" role="dialog" style={{ display: "block" }}>
           <div className="modal-dialog" role="document">
             <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">Add User</h5>
-                <button type="button" className="close" data-dismiss="modal" aria-label="Close" onClick={closeAddUserModal}>
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
+            
               <div className="modal-body">
                 <AddUser userId={selectedUserId} onClose={closeAddUserModal} onUpdateUsers={addUserToList} />
               </div>

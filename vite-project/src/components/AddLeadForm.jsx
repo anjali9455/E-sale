@@ -169,7 +169,7 @@
 import React, { Component } from "react";
 
 import axios from "axios";
-
+import "../styles/AddUser.css";
 class AddLeadForm extends Component {
     constructor(props) {
         super(props);
@@ -182,9 +182,11 @@ class AddLeadForm extends Component {
                 leadType: "",
                 NextFollowUp: "",
                 Location: "",
-               
+                status: "",
+                
             },
             createdLead: null,
+            error: null, 
         };
     }
 
@@ -216,15 +218,15 @@ class AddLeadForm extends Component {
     }
 
     try {
-      await axios.post('http://localhost:3001/api/lead', {
-        FirstName: formData.FirstName,
-        LastName: formData.LastName,
-        City: formData.City,
-        leadType: formData.leadType,
-        NextFollowUp: formData.NextFollowUp,
-        Location: formData.Location,
-        // Add other fields as needed
-      });
+      await axios.post('http://localhost:3001/api/lead',formData 
+        // FirstName: formData.FirstName,
+        // LastName: formData.LastName,
+        // City: formData.City,
+        // leadType: formData.leadType,
+        // NextFollowUp: formData.NextFollowUp,
+        // Location: formData.Location,
+        // // Add other fields as needed
+      );
 
       console.log('New lead created');
       onClose();
@@ -244,7 +246,7 @@ class AddLeadForm extends Component {
             NextFollowUp: "",
             Location: "",
             status: "",
-        },
+        }, error: null,
     });
 
     this.props.onClose();
@@ -252,25 +254,35 @@ class AddLeadForm extends Component {
 
 
     render() {
-        const { formData } = this.state;
+        const { formData ,error} = this.state;
 
-        return (
-            <div className="container mt-4">
-                <h1>Add Lead</h1>
-                <div>
-                    <div className="mb-3">
-                        <label htmlFor="FirstName" className="form-label">
-                            First Name
-                        </label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            id="FirstName"
-                            name="FirstName"
-                            value={formData.FirstName}
-                            onChange={this.handleInputChange}
-                        />
-                    </div>
+        return (  
+            <div className="modal-dialog" role="document">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title" id="addLeadModalTitle">
+                  Add Lead
+                </h5>
+                <button type="button" className="close" onClick={this.props.onClose}>
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div className="modal-body">
+                <form>
+                  <div className="mb-3">
+                    <label htmlFor="FirstName" className="form-label">
+                      First Name
+                    </label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="FirstName"
+                      name="FirstName"
+                      value={formData.FirstName}
+                      onChange={this.handleInputChange}
+                    />
+                  </div>
+    
                     <div className="mb-3">
                         <label htmlFor="LastName" className="form-label">
                             Last Name
@@ -330,27 +342,27 @@ class AddLeadForm extends Component {
                         <input
                             type="text"
                             className="form-control"
-                            id="Location"
+                            id="location"
                             name="Location"
                             value={formData.Location}
                             onChange={this.handleInputChange}
                         />
                     </div>
                     <div className="mb-3">
-                        <label htmlFor="status" className="form-label">
-                            Status
-                        </label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            id="status"
-                            name="status"
-                            value={formData.status}
-                            onChange={this.handleInputChange}
-                        />
-                    </div>
-                    <div className="mb-3">
-                        <button
+                <label htmlFor="status" className="form-label">
+                  Status
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="status"
+                  name="status"
+                  value={formData.status}
+                  onChange={this.handleInputChange}
+                />
+              </div>
+                    
+                        {/* <button
                             onClick={this.handleSave}
                             type="button"
                             className="btn btn-success"
@@ -363,12 +375,31 @@ class AddLeadForm extends Component {
                             onClick={this.handleCancel}
                         >
                             Cancel
-                        </button>
-                    </div>
-                </div>
-            </div>
-        );
-    }
+                        </button> */}
+                        </form>
+
+                   
+                        {error && <div className="alert alert-danger">{error}</div>}
+        </div>
+        <div className="modal-footer">
+          <button
+            type="button"
+            className="btn btn-secondary"
+            onClick={this.handleCancel}
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={this.handleSave}
+          > Save
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
 }
 
-export default AddLeadForm;
+export default AddLeadForm;;

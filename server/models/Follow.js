@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const followSchema = new mongoose.Schema({
 LeadID: {
-    type: String,
+    type: Number,
     required: false,
   },
   
