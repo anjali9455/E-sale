@@ -191,77 +191,95 @@ class AddLeadForm extends Component {
     }
 
     handleInputChange = (e) => {
-        const { name, value } = e.target;
-        this.setState({
-            formData: { ...this.state.formData, [name]: value },
-        });
+      const { name, value } = e.target;
+      this.setState((prevState) => ({
+        formData: { ...prevState.formData, [name]: value },
+      }));
     };
-
-    
-
-  handleSave = async () => {
-    console.log('Form Data:', this.state.formData);
-    console.log('handleSave function called');
-    const { onClose } = this.props;
-    const { formData } = this.state;
-
-    if (
-      !formData.FirstName ||
-      !formData.LastName ||
-      !formData.City ||
-      !formData.leadType ||
-      !formData.NextFollowUp ||
-      !formData.Location
-    ) {
-      console.error('Please fill in all required fields');
-      return;
+    componentDidMount() {
+      // If editLeadData prop is provided, set the form data to the lead being edited
+      const { editLeadData } = this.props;
+      if (editLeadData) {
+        this.setState({ formData: editLeadData });
+      }
     }
-
-    try {
-      await axios.post('http://localhost:3001/api/lead',formData 
-        // FirstName: formData.FirstName,
-        // LastName: formData.LastName,
-        // City: formData.City,
-        // leadType: formData.leadType,
-        // NextFollowUp: formData.NextFollowUp,
-        // Location: formData.Location,
-        // // Add other fields as needed
-      );
-
-      console.log('New lead created');
+    handleSave = async () => {
+      const { formData } = this.state;
+      const { onSaveLead, onClose, editLeadData } = this.props;
+  
+      if (
+        !formData.FirstName ||
+        !formData.LastName ||
+        !formData.City ||
+        !formData.leadType ||
+        !formData.NextFollowUp ||
+        !formData.Location
+      ) {
+        console.error("Please fill in all required fields");
+        return;
+      }
+  
+      try {
+        let response;
+  
+        if (editLeadData) {
+          response = await axios.put(
+            `http://localhost:3001/api/lead/${editLeadData._id}`,
+            formData
+          );
+          console.log("Lead updated successfully");
+        } else {
+          response = await axios.post("http://localhost:3001/api/lead", formData);
+          console.log("New lead created");
+        }
+  
+        if (response && response.data) {
+          onSaveLead(response.data);
+          onClose();
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        alert("Failed to save the lead. Please try again.");
+      }
+    };
+  
+    handleCancel = () => {
+      const { onClose, editLeadData } = this.props;
+      this.setState({
+        formData: editLeadData
+          ? { ...editLeadData }
+          : {
+              FirstName: "",
+              LastName: "",
+              City: "",
+              leadType: "",
+              NextFollowUp: "",
+              Location: "",
+              status: "",
+            },
+        error: null,
+      });
+  
       onClose();
-    } catch (error) {
-      console.error('Error creating a new lead:', error);
-      alert('Failed to create a new lead. Please try again.');
+    };
+ 
+    componentDidMount() {
+      const { editLeadData } = this.props;
+      if (editLeadData) {
+        this.setState({ formData: editLeadData });
+      }
     }
-  };
-
-  handleCancel = () => {
-    this.setState({
-        formData: {
-            FirstName: "",
-            LastName: "",
-            City: "",
-            leadType: "",
-            NextFollowUp: "",
-            Location: "",
-            status: "",
-        }, error: null,
-    });
-
-    this.props.onClose();
-};
-
-
+  
     render() {
         const { formData ,error} = this.state;
-
+        const { editLeadData } = this.props; 
         return (  
             <div className="modal-dialog" role="document">
             <div className="modal-content">
               <div className="modal-header">
-                <h5 className="modal-title" id="addLeadModalTitle">
-                  Add Lead
+                <h5 className="modal-title" id="addLeadModalTitle"
+                >
+                 {editLeadData ? 'Edit Lead' : 'Add Lead'}
                 </h5>
                 <button type="button" className="close" onClick={this.props.onClose}>
                   <span aria-hidden="true">&times;</span>
@@ -323,7 +341,7 @@ class AddLeadForm extends Component {
                         />
                     </div>
                     <div className="mb-3">
-                        <label htmlFor="nextFollowUp" className="form-label">
+                        <label htmlFor="NextFollowUp" className="form-label">
                             Next Follow-Up
                         </label>
                         <input
@@ -342,7 +360,7 @@ class AddLeadForm extends Component {
                         <input
                             type="text"
                             className="form-control"
-                            id="location"
+                            id="Location"
                             name="Location"
                             value={formData.Location}
                             onChange={this.handleInputChange}
@@ -378,28 +396,30 @@ class AddLeadForm extends Component {
                         </button> */}
                         </form>
 
-                   
                         {error && <div className="alert alert-danger">{error}</div>}
-        </div>
-        <div className="modal-footer">
-          <button
-            type="button"
-            className="btn btn-secondary"
-            onClick={this.handleCancel}
-          >
-            Cancel
-          </button>
-          <button
-            type="button"
-            className="btn btn-primary"
-            onClick={this.handleSave}
-          > Save
-          </button>
+          </div>
+          <div className="modal-footer">
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={this.handleCancel}
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={this.handleSave}
+            >
+              Save
+            </button>
+          </div>
         </div>
       </div>
-    </div>
-  );
-}
-}
+          );
+        }
+      }
+      
 
-export default AddLeadForm;;
+
+export default AddLeadForm;

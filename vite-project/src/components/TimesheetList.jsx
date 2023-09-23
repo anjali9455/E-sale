@@ -557,7 +557,9 @@ const TimesheetList = () => {
   const [showAddNewForm, setShowAddNewForm] = useState(false);
   const [totalPages, setTotalPages] = useState(0);
   const [selectedTimesheetIds, setSelectedTimesheetIds] = useState([]);
+  const [editedTimesheet, setEditedTimesheet] = useState(null)
   const [showAddTimeSheet, setShowAddTimesheet] = useState(false)
+  const [selectedTimesheet, setSelectedTimesheet] = useState(null);
 
   useEffect(() => {
     // Fetch timesheet data from your backend API here
@@ -611,11 +613,31 @@ const TimesheetList = () => {
   const addTimesheetToList = (onOpenForm) => {
     setTimesheets([...Timesheets, onOpenForm]);
   };
+  const handleEditTimesheet = (timesheetId) => {
+    const timesheetToEdit = timesheets.find((timesheet) => timesheet._id === timesheetId);
+    if (timesheetToEdit) {
+      setEditedTimesheet(timesheetToEdit);
+      setShowAddNewForm(true);
+    }
+  };
+
+  const handleUpdateTimesheet = () => {
+    Axios.put(`http://localhost:3001/api/timesheet/${editedTimesheet._id}`, editedTimesheet)
+      .then((response) => {
+        console.log('Timesheet updated:', response.data);
+        setEditedTimesheet(null); // Clear edited timesheet after update
+        closeAddTimesheetModal();
+      })
+      .catch((error) => {
+        console.error('Error updating timesheet:', error);
+      });
+  };
+
   const handleAddTimesheet = (newTimesheet) => {
-    Axios.post("http://localhost:3001/api/timesheet", onOpenForm)
+    Axios.post("http://localhost:3001/api/timesheet", newTimesheet)
       .then((response) => {
         setTimesheets([...timesheets, response.data]);
-        closeAddNewForm();
+        closeAddTimesheetModal();
         setTotalPages(Math.ceil((timesheets.length + 1) / itemsPerPage));
       })
       .catch((error) => {
@@ -644,6 +666,18 @@ const TimesheetList = () => {
     indexOfFirstTimesheet,
     indexOfLastTimesheet
   );
+  const handleDeleteTimesheet = (timesheetId) => {
+    Axios.delete(`http://localhost:3001/api/timesheet/${timesheetId}`)
+      .then((response) => {
+        console.log('Timesheet deleted successfully:', response.data);
+        // Update the timesheets after deletion
+        const updatedTimesheets = timesheets.filter((timesheet) => timesheet._id !== timesheetId);
+        setTimesheets(updatedTimesheets);
+      })
+      .catch((error) => {
+        console.error('Error deleting timesheet:', error);
+      });
+  };
 
   return (
     <div className="container mt-4">
@@ -661,6 +695,7 @@ const TimesheetList = () => {
           <button className="btn btn-danger ml-2" onClick={deleteSelectedTimesheets}>
             Delete
           </button>
+          
         </div>
       </div>
       <div className="table-responsive">
@@ -698,8 +733,12 @@ const TimesheetList = () => {
                   </ul>
                 </td>
                 <td>
-                  <button className="btn btn-warning">Edit</button>
+                  <button className="btn btn-warning"  onClick={() => handleEditTimesheet(timesheet._id)}>Edit</button>
                 </td>
+                <td>
+  <button className="btn btn-danger" onClick={() => handleDeleteTimesheet(timesheet._id)}>Delete</button>
+</td>
+
               </tr>
             ))}
           </tbody>
@@ -731,9 +770,25 @@ const TimesheetList = () => {
          <div className="modal" tabIndex="-1" role="dialog" style={{ display: "block" }}>
        <div className="modal-dialog" role="document">
          <div className="modal-content">
+              <div className="modal-header">
+              <h5 className="modal-title">{editedTimesheet ? 'Edit Timesheet' : 'Add New Timesheet'}</h5>
+                <button
+                  type="button"
+                  className="close"
+                  data-dismiss="modal" 
+                  aria-label="Close"
+                  onClick={closeAddTimesheetModal}
+                >
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div className="modal-body"><AddTimesheet
+     onAddTimesheet={handleAddTimesheet}
+     onCloseForm={closeAddTimesheetModal}
+     onOpenForm={openAddNewForm}
+     editedTimesheet={editedTimesheet}
+/>
 
-              <div className="modal-body">
-                <AddTimesheet timesheetIds ={selectedTimesheetIds}  onCloseForm={closeAddTimesheetModal} onUpdateTimesheets={addTimesheetToList} onOpenForm={openAddNewForm} />
               </div>
             </div>
           </div>

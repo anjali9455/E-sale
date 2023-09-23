@@ -25,7 +25,7 @@ app.use(express.json())
 app.use(cors())
 app.use('/api/follow', followRoutes);
 app.use('/api/lead', leadRoutes);
-app.use('/app/timesheet',timesheetRoutes);
+app.use('/api/timesheet',timesheetRoutes);
 mongoose.connect("mongodb+srv://Anjali:Anjalivaid1999%40@cluster0.ybufs7a.mongodb.net/Sales?retryWrites=true&w=majority",{useNewUrlParser: true,
 useUnifiedTopology: true})
 // app.post('/login',async(req,res)=>{
@@ -36,6 +36,7 @@ useUnifiedTopology: true})
 //        if(user.password ===password){
 //         res.json("Sucess")
 //        }else{
+  
 //         res.json("the password is incorrect")
 //        }
 //     }else{
@@ -104,8 +105,15 @@ app.put('/api/users/update/:userId', (req, res) => {
 
 
 app.post('/api/users', (req, res) => {
+  const { name, email } = req.body;
+  const newUser = { id: totalUsers++, name, email };
+  users.push(newUser);
+  const pageSize = 10; // Assuming 10 users per page
+  const newPage = Math.ceil(totalUsers / pageSize);
   const userData = req.body;
+  totalUsers++;
   UserModel.create(userData)
+  
     .then((user) => {
       res.json(user);
     })
@@ -113,8 +121,9 @@ app.post('/api/users', (req, res) => {
       console.error('Error creating user:', error);
       res.status(500).json({ error: 'Error creating user' });
     });
-});
 
+  res.status(201).json({ message: 'User added successfully', page: newPage });
+});
 // List Users route using UserModel
 app.get('/api/users', (req, res) => {
   UserModel.find({})
@@ -212,6 +221,18 @@ app.get('/api/timesheet', (req, res) => {
     });
 });
 
+// Example route for handling logout
+
+app.post('/logout', (req, res) => {
+  const { username } = req.body;
+  if (loggedInUsers.has(username)) {
+    loggedInUsers.delete(username);
+    res.json({ message: 'Logout successful' });
+  } else {
+    res.status(401).json({ message: 'User is not logged in' });
+  }
+});
+
 
 
 app.post('/register',(req,res)=>{
@@ -220,8 +241,17 @@ app.post('/register',(req,res)=>{
 .catch(err=>res.json(err))
 })
 
+app.post('/search', (req, res) => {
+  const { query } = req.body;
+  // Implement your search logic here
+  console.log('Search query:', query);
+  res.json({ message: 'Search completed', query });
+});
 
 
 app.listen(3001,()=>{
   console.log("server is running")
  })
+ let totalUsers = 0; // Variable to track the total number of users
+
+ 

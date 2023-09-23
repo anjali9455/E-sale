@@ -1,112 +1,47 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-// import { useDashboardContext } from "../DashboardProvider";
-import "bootstrap/dist/css/bootstrap.min.css"; // Import Bootstrap CSS
-import { FaUser, FaSearch } from "react-icons/fa"; // Import Font Awesome icons
-import { BsArrowUp } from "react-icons/bs"; // Import Bootstrap icons
-import { BiKey } from "react-icons/bi"; // Import Bootstrap icons
-import { RiLogoutBoxLine } from "react-icons/ri"; // Import Bootstrap icons
+// import React, { useState } from "react";
+// import { Link, useNavigate } from "react-router-dom";
+// import { FaUser, FaSearch } from "react-icons/fa";
+// import { RiLogoutBoxLine } from "react-icons/ri";
 
-const Navbar = () => {
-//   const { user, logoutUser } = useDashboardContext();
-  const navigate = useNavigate();
+// const Navbar = () => {
+//   const navigate = useNavigate();
 
-  const handleLogout = async () => {
-    await logoutUser();
-    navigate("/login");
-  };
+//   // Function to handle logout
+//   const handleLogout = () => {
+//     // Implement your logout logic here
+//     // For example, clearing user session, etc.
+//     // After logout, navigate to the login page
+//     navigate("/login");
+//   };
 
-  const [showProfile, setShowProfile] = useState(false);
+//   const [showProfile, setShowProfile] = useState(false);
 
-  const handleProfileClick = () => {
-    setShowProfile(!showProfile);
-  };
-  const navbarStyles = {
-    background: 'rgb(140, 17, 17)', // Dark background color
-    color: 'dark', // Text color
-  };
+//   const handleProfileClick = () => {
+//     setShowProfile(!showProfile);
+//   };
 
-  return (
+//   return (
+//     <div className="row py-4">
+//       <div className="col-9"></div>
+//       <div className="row col-3">
+//         <div className="col-3">
+//           <FaSearch />
+//         </div>
+//         <div className="col-3">sdsd</div>
+//         <div className="col-3">sdsd</div>
+//         <div className="col-3">
+//           <button className="btn" onClick={handleLogout}>
+//             <RiLogoutBoxLine />
+//             Log Out
+//           </button>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
 
-    // <nav className="navbar navbar-expand-lg navbar-light">
-    //   <div className="container"> 
-    //     {/* {/* <Link className="navbar-brand" to="/">
-    //       Your Logo
-    //     </Link> */}
-    //     <button
-    //       className="navbar-toggler"
-    //       type="button"
-    //       data-bs-toggle="collapse"
-    //       data-bs-target="#navbarNav"
-    //       aria-controls="navbarNav"
-    //       aria-expanded="false"
-    //       aria-label="Toggle navigation"
-    //     >
-    //       <span className="navbar-toggler-icon"></span>
-    //     </button>
-    //     <div className="collapse navbar-collapse" id="navbarNav">
-    //       <ul className="navbar-nav ml-auto">
-    //         <li className="nav-item dropdown">
-    //           <button
-    //             className="btn btn-light nav-link dropdown-toggle"
-    //             type="button"
-    //             id="profileDropdown"
-    //             data-bs-toggle="dropdown"
-    //             aria-expanded="false"
-    //           >
-    //              {/* {user?.user?.avatar ? (
-    //              <img
-    //                className="profileImage"
-    //               src={user.user.avatar}
-    //                alt={`${user.user.name} `}
-    //                />
-    //             ) : (
-    //               <FaUser className="profileImage" />
-    //             )} 
-    //             <span className={`username ${showProfile ? "open" : ""}`}>
-    //               {user?.user?.name} <BsArrowUp />
-    //             </span> */}
+// export default Navbar;
 
-    //           </button>
-    //           <ul
-    //             className={`dropdown-menu ${showProfile ? "show" : ""}`}
-    //             aria-labelledby="profileDropdown"
-    //           >
-    //             <li>
-    //               <Link to="profile" className="dropdown-item">
-    //                 <BiKey className="itemIcon" />
-    //                 Change Password
-    //               </Link>
-    //             </li>
-    //             <li>
-    //               <button
-    //                 className="dropdown-item"
-    //                 onClick={handleLogout}
-    //               >
-    //                 <RiLogoutBoxLine className="itemIcon" />
-    //                 Log Out
-    //               </button>
-    //             </li>
-    //           </ul>
-    //         </li>
-    //       </ul>
-    //     </div>
-    //   </div>
-    // </nav>
-
-    <div className="row py-4 ">
-      <div className="col-9"></div>
-  <div className="row col-3">
-  <div className="col-3"><FaSearch/></div>
-  <div className="col-3">sdsd</div>
-  <div className="col-3">sdsd</div>
-  <div className="col-3"><FaUser/></div>
-  </div>
-    </div>
-)
-};
-
-export default Navbar;
 // import React, { useState } from "react";
 // import { Link, useNavigate } from "react-router-dom";
 // import "bootstrap/dist/css/bootstrap.min.css";
@@ -212,4 +147,74 @@ export default Navbar;
 //   );
 // };
 
-// export default Navbar;
+// export default Navbar;import React, { useState } from "react";
+import React, { useState } from "react";
+import { FaUser, FaSearch } from "react-icons/fa";
+import { RiLogoutBoxLine } from "react-icons/ri";
+import "../styles/Navbar.css"
+
+const Navbar = () => {
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const handleSearch = () => {
+    fetch('http://localhost:3001/search', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ query: searchQuery }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('Search response:', data);
+      })
+      .catch((error) => {
+        console.error('Error searching:', error);
+      });
+  };
+  const handleLogout = async () => {
+    try {
+      const response = await fetch("http://localhost:3001/logout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username: "username" }), // Replace with the actual username
+      });
+  
+      if (response.ok) {
+        console.log("Logout successful");
+      } else {
+        console.error("Logout failed");
+      }
+    } catch (error) {
+      console.error("An error occurred during logout:", error);
+    }
+  };
+
+  return (
+    <div className="navbar-container">
+      <div className="navbar-content">
+        <input
+          type="text"
+          className="search-input"
+          placeholder="Search..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+        <div className="search-icon" onClick={handleSearch}>
+          <FaSearch />
+        </div>
+        <div className="logout-button" onClick={handleLogout}>
+          <button className="btn">
+            <RiLogoutBoxLine />
+            Log Out
+          </button>
+
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Navbar;

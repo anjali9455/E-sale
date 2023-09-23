@@ -11,19 +11,19 @@ const timesheetSchema = new mongoose.Schema({
       
       LastFollowUp: {
         type: String,
-        required: false,
+        required: true,
       },
   NextFollowUp: {
     type: String,
-    required: false,
+    required:true,
   },
   Status:{
     type: String,
-    required: false,
+    required: true,
   },
   AddContact:{
     type:[String],
-    required: false,
+    required: true,
   },
   
 Name : {
@@ -34,6 +34,7 @@ email: {
     type: String,
     required: true,
 },
+
 Phone: {
     type: String,
     required: true,

@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const leadSchema = new mongoose.Schema({
+  _id: mongoose.Schema.Types.ObjectId, 
 FirstName: {
     type: String,
     required: true,

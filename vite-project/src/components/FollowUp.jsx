@@ -85,25 +85,59 @@ const FollowUp = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [showAddFollowUp, setShowAddFollowUp] = useState(false);
 
+  const [editData, setEditData] = useState(null);
   const itemsPerPage = 10;
 
-  useEffect(() => {
-    axios
-      .get("http://localhost:3001/api/follow")
-      .then((response) => {
-        console.log('Fetched follow-ups:', response.data);;
-        setFollowUps(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching follow-up data:", error);
-      });
-  }, []);
-
-  const handleSaveFollowUp = (newFollowup) => {
-    // Generate a unique ID for the new follow-up
-    newFollowup.id = Date.now().toString();
-    setFollowUps([...followUps, newFollowup]);
+  const openAddFollowUpModal = () => {
+    // When opening the modal to add a follow-up, set editData to null
+    setEditData(null);
+    setShowAddFollowUp(true);
   };
+  // useEffect(() => {
+  //   axios
+  //     .get("http://localhost:3001/api/follow")
+  //     .then((response) => {
+  //       console.log('Fetched follow-ups:', response.data);;
+  //       setFollowUps(response.data);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching follow-up data:", error);
+  //     });
+  // }, []
+  const handleSaveFollowUp = (newFollowup, followUpId) => {
+    let updatedFollowup;  
+    if (followUpId) {
+      // Update existing follow-up
+      updatedFollowup = newFollowup;
+      axios
+      .put(`http://localhost:3001/api/follow/${followUpId}`, updatedFollowup)
+      .then((response) => {
+        console.log('Follow-up updated successfully:', response.data);
+          const updatedFollowUps = followUps.map((followUp) =>
+            followUp._id === followUpId ? response.data : followUp
+          );
+          setFollowUps(updatedFollowUps);
+          setShowAddFollowUp(false);
+        })
+        .catch((error) => {
+          console.error("Error updating follow-up:", error);
+        });
+    } else {
+     
+      // Add new follow-up
+      axios
+        .post("http://localhost:3001/api/follow", newFollowup)
+        .then((response) => {
+          console.log("Follow-up saved successfully:", response.data);
+          setFollowUps([...followUps, response.data]);
+          setShowAddFollowUp(false);
+        })
+        .catch((error) => {
+          console.error("Error saving follow-up:", error);
+        });
+    }
+  };
+
 
   const deleteFollowUp = (id) => {
     const updatedFollowUps = followUps.filter((followUp) => followUp.id !== id);
@@ -116,19 +150,30 @@ const FollowUp = () => {
   const currentFollowUps = followUps.slice(startIndex, endIndex);
 
   
+  const handleEdit = (followUp) => {
+    setEditData(followUp);
+    setShowAddFollowUp(true);
+  };
 
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
   };
 
-  const openAddFollowUpModal = () => {
-    setShowAddFollowUp(true);
-  };
-
+ 
   const closeAddFollowUpModal = () => {
     setShowAddFollowUp(false);
   };
-
+  const handleDelete = (id) => {
+    axios
+      .delete(`http://localhost:3001/api/follow/${id}`)
+      .then(() => {
+        const updatedFollowUps = followUps.filter((followUp) => followUp._id !== id);
+        setFollowUps(updatedFollowUps);
+      })
+      .catch((error) => {
+        console.error('Error deleting follow-up:', error);
+      });
+  };
   
 
   return (
@@ -159,28 +204,28 @@ const FollowUp = () => {
           </thead>
           <tbody>
             {currentFollowUps.map((followUp) => (
-              <tr key={followUp.id}>
-                <td>{followUp.leadId}</td>
-                <td>{followUp.date}</td>
-                <td>{followUp.time}</td>
-                <td>{followUp.nextFollowUp}</td>
-                <td>{followUp.location}</td>
-                <td>{followUp.status}</td>
+              <tr key={followUp._id}>
+                     <td>{followUp.LeadID}</td>
+      <td>{followUp.Date}</td>
+      <td>{followUp.Time}</td>
+      <td>{followUp.NextFollowUp}</td>
+      <td>{followUp.Location}</td>
+      <td>{followUp.Status}</td>
                 <td>
                   <button
                     className="btn btn-warning"
-                    onClick={() => {
+                    onClick={() => {handleEdit(followUp)
                       // Handle edit action here
                     }}
                   >
                     Edit
                   </button>
                   <button
-                    className="btn btn-danger mx-2"
-                    onClick={() => deleteFollowUp(followUp.id)}
-                  >
-                    Delete
-                  </button>
+                className="btn btn-danger mx-2"
+                onClick={() => handleDelete(followUp._id)} // Call handleDelete with follow-up ID
+              >
+                Delete
+              </button>
                 </td>
               </tr>
             ))}
@@ -248,6 +293,8 @@ const FollowUp = () => {
                 <AddFollowUp
                   onClose={closeAddFollowUpModal}
                   onSaveFollowup={handleSaveFollowUp}
+                  editData={editData} 
+                  
                 />
               </div>
             </div>

@@ -1,0 +1,26 @@
+.navbar-container {
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px;
+  }
+  
+  .navbar-content {
+    display: flex;
+    align-items: center;
+  }
+  
+  .search-input {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .search-icon {
+    margin-left: -30px; /* Adjust the margin as needed */
+    cursor: pointer;
+  }
+  
+  .logout-button {
+    margin-left: 10px;
+  }
+  

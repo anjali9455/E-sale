@@ -15,6 +15,20 @@ router.post('/', async (req, res) => {
   }
 });
 
+// Route for updating a follow-up by its ID
+router.put('/:id', async (req, res) => {
+  const followUpId = req.params.id;
+  const updatedFollowup = req.body;
+
+  try {
+    // Update the follow-up with the provided ID using the updated data
+    const updatedFollowupRecord = await FollowModel.findByIdAndUpdate(followUpId, updatedFollowup, { new: true });
+    res.json(updatedFollowupRecord);
+  } catch (error) {
+    console.error('Error updating follow-up:', error);
+    res.status(500).json({ error: 'Error updating follow-up', details: error.message });
+  }
+});
 
 // Route for retrieving all follow-ups
 router.get('/', async (req, res) => {
@@ -27,6 +41,20 @@ router.get('/', async (req, res) => {
   }
 });
 
+
 // Other follow-up-related routes can be defined here
+// Route for deleting a follow-up
+router.delete('/:followUpId', (req, res) => {
+  const { followUpId } = req.params;
+
+  FollowModel.findByIdAndDelete(followUpId) // Use FollowModel
+    .then(() => {
+      res.json({ message: 'Follow-up deleted successfully' });
+    })
+    .catch((error) => {
+      console.error('Error deleting follow-up:', error);
+      res.status(500).json({ error: 'Error deleting follow-up' });
+    });
+});
 
 module.exports = router;
